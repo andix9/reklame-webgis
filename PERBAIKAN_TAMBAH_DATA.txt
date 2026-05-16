@@ -1,0 +1,22 @@
+Perbaikan fokus fitur tambah data dan edit data.
+
+File yang diubah:
+1. app/Http/Controllers/ReklameController.php
+   - tambah try/catch saat simpan dan update
+   - validasi foto sekarang menerima jpg, jpeg, png, webp
+   - jika gagal, muncul pesan yang lebih jelas
+
+2. resources/views/reklames/create.blade.php
+   - tampilkan pesan validasi
+   - latitude/longitude bisa diisi manual
+   - keterangan format foto diperjelas
+
+3. resources/views/reklames/edit.blade.php
+   - tampilkan pesan validasi
+   - latitude/longitude bisa diisi manual
+   - keterangan format foto diperjelas
+
+Langkah setelah update:
+- php artisan optimize:clear
+- php artisan storage:link
+- pastikan login sebagai admin

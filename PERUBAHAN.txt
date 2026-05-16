@@ -1,0 +1,34 @@
+Daftar file yang diubah / ditambahkan:
+
+1. DIUBAH
+- bootstrap/app.php
+- routes/web.php
+- app/Http/Controllers/LoginController.php
+- app/Http/Controllers/ReklameController.php
+- app/Models/User.php
+- database/migrations/0001_01_01_000000_create_users_table.php
+- database/seeders/DatabaseSeeder.php
+- resources/views/reklames/create.blade.php
+- resources/views/reklames/edit.blade.php
+- resources/views/reklames/index.blade.php
+- resources/views/reklames/list.blade.php
+- .env.example
+- README.md
+
+2. DITAMBAHKAN
+- routes/api.php
+- app/Http/Middleware/AdminMiddleware.php
+- PERUBAHAN_CHATGPT.txt
+
+3. DIHAPUS
+- database/migrations/2026_01_30_044003_create_users_table.php
+- .env
+
+Perubahan utama:
+- menambahkan sistem role admin
+- membuat akun admin default
+- membatasi halaman manajemen data hanya untuk admin
+- menambahkan endpoint API untuk ESP32
+- menyeragamkan status pajak menjadi Lunas / Belum Lunas
+- mengubah default konfigurasi XAMPP pada .env.example
+- mengarahkan default peta ke area Simalungun
