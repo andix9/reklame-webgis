@@ -18,6 +18,7 @@ Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/daftar-reklame/export-excel', [ReklameController::class, 'exportExcel'])->name('reklames.exportExcel');
     Route::get('/daftar-reklame', [ReklameController::class, 'list'])->name('reklames.list');
     Route::resource('reklames', ReklameController::class)->except(['index', 'show']);
 });

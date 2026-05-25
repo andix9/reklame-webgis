@@ -20,9 +20,12 @@
 <div class="container py-4">
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                 <h4 class="mb-0">Daftar Data Reklame</h4>
-                <span class="badge bg-primary">{{ $reklames->count() }} data</span>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{{ route('reklames.exportExcel') }}" class="btn btn-success btn-sm">Export Excel</a>
+                    <span class="badge bg-primary">{{ $reklames->count() }} data</span>
+                </div>
             </div>
 
             @if(session('success'))

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Reklame;
 use App\Models\StatusPajak;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
 class ReklameController extends Controller
@@ -36,6 +38,23 @@ class ReklameController extends Controller
     public function create()
     {
         return view('reklames.create');
+    }
+
+    public function exportExcel()
+    {
+        $reklames = Reklame::with(['statusPajak', 'lokasi', 'dokumentasi'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $filename = 'laporan_data_reklame_' . now()->format('Ymd_His') . '.xls';
+
+        return response()
+            ->view('reklames.export-excel', compact('reklames'))
+            ->header('Content-Type', 'application/vnd.ms-excel; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->header('Pragma', 'no-cache')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0');
     }
 
     public function store(Request $request)
@@ -67,7 +86,7 @@ class ReklameController extends Controller
                 'ukuran' => $data['ukuran'] ?? null,
                 'date_exp' => $data['date_exp'] ?? null,
                 'status_pajak_id' => $status->id,
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
             ]);
 
             $reklame->lokasi()->create([
@@ -151,7 +170,7 @@ class ReklameController extends Controller
                 'ukuran' => $data['ukuran'] ?? $reklame->ukuran,
                 'date_exp' => $data['date_exp'] ?? null,
                 'status_pajak_id' => $status->id,
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
             ]);
 
             $lokasiTerakhir = $reklame->lokasi()->latest('id')->first();
@@ -361,7 +380,7 @@ class ReklameController extends Controller
             'jenis_reklame' => $reklame->jenis_reklame,
             'ukuran' => $reklame->ukuran,
             'date_exp' => $reklame->date_exp
-                ? $reklame->date_exp->format('Y-m-d')
+                ? Carbon::parse($reklame->date_exp)->format('Y-m-d')
                 : null,
             'status_pajak' => optional($reklame->statusPajak)->nama_status,
             'alamat' => optional($lokasi)->alamat,

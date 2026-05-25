@@ -46,7 +46,8 @@
         }
 
         #map {
-            height: calc(100vh - 56px);
+            height: calc(100vh - 56px - 205px);
+            min-height: 420px;
         }
 
         .leaflet-tooltip {
@@ -76,6 +77,103 @@
             padding: 10px 12px;
         }
 
+        .map-summary {
+            background: #f4f1e8;
+            border-bottom: 2px solid #333333;
+        }
+
+        .vertical-chart-card {
+            background: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 0;
+            padding: 12px 16px;
+            height: 100%;
+            box-shadow: none;
+        }
+
+        .vertical-chart-title {
+            color: #111111;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .vertical-chart {
+            height: 145px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 18px;
+            padding: 10px 10px 26px 10px;
+            border-left: 2px solid #333333;
+            border-bottom: 2px solid #333333;
+            background:
+                repeating-linear-gradient(
+                    to top,
+                    #ffffff 0,
+                    #ffffff 28px,
+                    #e5e5e5 29px
+                );
+        }
+
+        .vertical-chart-item {
+            min-width: 68px;
+            text-align: center;
+        }
+
+        .chart-track {
+            width: 42px;
+            height: 105px;
+            margin: 0 auto 7px auto;
+            background: transparent;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .chart-bar {
+            width: 100%;
+            height: 0%;
+            min-height: 2px;
+            border-radius: 0;
+            border: 1px solid #333333;
+            transition: height 0.3s ease;
+        }
+
+        .chart-bar-total {
+            background: #4f81bd;
+        }
+
+        .chart-bar-visible {
+            background: #c0c0c0;
+        }
+
+        .chart-bar-lunas {
+            background: #70ad47;
+        }
+
+        .chart-bar-belum-terdaftar {
+            background: #f4b183;
+        }
+
+        .chart-value {
+            color: #111111;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .chart-label {
+            color: #111111;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 0.74rem;
+            line-height: 1.1;
+        }
+
         .map-status {
             font-size: 0.85rem;
             margin-top: 10px;
@@ -88,6 +186,12 @@
 
             #map {
                 height: 60vh;
+                min-height: 360px;
+            }
+
+            .vertical-chart {
+                height: 105px;
+                gap: 18px;
             }
         }
     </style>
@@ -162,27 +266,6 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mt-3">
-                    <div class="col-4">
-                        <div class="stat-box text-center">
-                            <div class="small text-white-50">Total</div>
-                            <div class="fw-bold" id="countTotal">0</div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stat-box text-center">
-                            <div class="small text-white-50">Tampil</div>
-                            <div class="fw-bold" id="countVisible">0</div>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stat-box text-center">
-                            <div class="small text-white-50">Lunas</div>
-                            <div class="fw-bold" id="countLunas">0</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="mapStatus" class="alert alert-warning d-none map-status mb-0">
                     Tile OpenStreetMap gagal dimuat. Cek koneksi internet.
                 </div>
@@ -197,6 +280,45 @@
         </div>
 
         <div class="col-12 col-md-8 col-lg-9 p-0">
+            <div class="map-summary p-3">
+                <div class="vertical-chart-card">
+                    <div class="vertical-chart-title">Diagram Statistik Data Reklame</div>
+                    <div class="vertical-chart">
+                        <div class="vertical-chart-item">
+                            <div class="chart-track">
+                                <div class="chart-bar chart-bar-total" id="chartTotalBar"></div>
+                            </div>
+                            <div class="chart-value" id="chartTotalValue">0</div>
+                            <div class="chart-label">Total</div>
+                        </div>
+
+                        <div class="vertical-chart-item">
+                            <div class="chart-track">
+                                <div class="chart-bar chart-bar-visible" id="chartVisibleBar"></div>
+                            </div>
+                            <div class="chart-value" id="chartVisibleValue">0</div>
+                            <div class="chart-label">Tampil</div>
+                        </div>
+
+                        <div class="vertical-chart-item">
+                            <div class="chart-track">
+                                <div class="chart-bar chart-bar-lunas" id="chartLunasBar"></div>
+                            </div>
+                            <div class="chart-value" id="chartLunasValue">0</div>
+                            <div class="chart-label">Lunas</div>
+                        </div>
+
+                        <div class="vertical-chart-item">
+                            <div class="chart-track">
+                                <div class="chart-bar chart-bar-belum-terdaftar" id="chartBelumTerdaftarBar"></div>
+                            </div>
+                            <div class="chart-value" id="chartBelumTerdaftarValue">0</div>
+                            <div class="chart-label">Belum<br>Terdaftar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="map"></div>
         </div>
     </div>
@@ -336,8 +458,36 @@
 
     var allReklames = rawReklames.map(normalizeReklame);
 
-    document.getElementById('countTotal').innerText = allReklames.length;
-    document.getElementById('countLunas').innerText = allReklames.filter(r => r.status_pajak === 'Lunas').length;
+    function setBarHeight(elementId, value, maxValue) {
+        const element = document.getElementById(elementId);
+        const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+        element.style.height = Math.min(percentage, 100) + '%';
+    }
+
+    function isBelumTerdaftarStatus(status) {
+        const normalizedStatus = (status || '').toString().toLowerCase().trim();
+
+        return normalizedStatus === 'tidak terdaftar' ||
+               normalizedStatus === 'belum terdaftar';
+    }
+
+    function updateStatistik(visibleData) {
+        const totalCount = allReklames.length;
+        const visibleCount = visibleData.length;
+        const lunasCount = visibleData.filter(r => r.status_pajak === 'Lunas').length;
+        const belumTerdaftarCount = visibleData.filter(r => isBelumTerdaftarStatus(r.status_pajak)).length;
+        const maxValue = Math.max(totalCount, visibleCount, lunasCount, belumTerdaftarCount, 1);
+
+        document.getElementById('chartTotalValue').innerText = totalCount;
+        document.getElementById('chartVisibleValue').innerText = visibleCount;
+        document.getElementById('chartLunasValue').innerText = lunasCount;
+        document.getElementById('chartBelumTerdaftarValue').innerText = belumTerdaftarCount;
+
+        setBarHeight('chartTotalBar', totalCount, maxValue);
+        setBarHeight('chartVisibleBar', visibleCount, maxValue);
+        setBarHeight('chartLunasBar', lunasCount, maxValue);
+        setBarHeight('chartBelumTerdaftarBar', belumTerdaftarCount, maxValue);
+    }
 
     var greenIcon = new L.Icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -472,7 +622,7 @@
         });
 
         map.addLayer(markersLayer);
-        document.getElementById('countVisible').innerText = validData.length;
+        updateStatistik(validData);
 
         if (validData.length > 0) {
             var bounds = validData.map(function (r) {
